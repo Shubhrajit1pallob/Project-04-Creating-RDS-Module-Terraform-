@@ -21,6 +21,16 @@ data "aws_subnet" "input" {
       ID: ${self.id}
       EOT
     }
+
+    postcondition {
+      condition     = can(lower(self.tags.Access) == "private")
+      error_message = <<-EOT
+      The subnet must be private. Please tag the below subnets with "Access" set to "private".
+
+      Name: ${self.tags["Name"]}
+      ID: ${self.id}
+      EOT
+    }
   }
 }
 

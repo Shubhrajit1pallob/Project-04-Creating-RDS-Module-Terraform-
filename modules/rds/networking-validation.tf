@@ -13,8 +13,13 @@ data "aws_subnet" "input" {
 
   lifecycle {
     postcondition {
-      condition     = self.vpc_id != aws_vpc.default.id
-      error_message = "The subnet must not be in the default VPC."
+      condition     = self.vpc_id != data.aws_vpc.default.id
+      error_message = <<-EOT
+      The subnet must not belong to the default VPC. Please select a subnet from a custom VPC.
+
+      Name: ${self.tags["Name"]}
+      ID: ${self.id}
+      EOT
     }
   }
 }

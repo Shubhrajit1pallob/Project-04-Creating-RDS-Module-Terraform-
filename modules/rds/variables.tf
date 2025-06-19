@@ -1,11 +1,20 @@
+##############################
+# General Information
+##############################
+
 variable "project_name" {
-  description = "The name of the project"
+  description = "The name of the RDS instance"
   type        = string
 }
 
+##############################
+# DB Configuration
+##############################
+
 variable "instance_class" {
-  type    = string
-  default = "db.t3.micro"
+  type        = string
+  default     = "db.t3.micro"
+  description = "The instance class for the RDS instance. Only db.t3.micro is allowed."
 
   validation {
     condition     = contains(["db.t3.micro"], var.instance_class)
@@ -14,8 +23,9 @@ variable "instance_class" {
 }
 
 variable "storage_size" {
-  type    = number
-  default = 8
+  type        = number
+  default     = 8
+  description = "Storage size in GB for the RDS instance. Must be between 5 and 10 GB."
 
   validation {
     condition     = var.storage_size >= 5 && var.storage_size <= 10
@@ -24,8 +34,9 @@ variable "storage_size" {
 }
 
 variable "engine" {
-  type    = string
-  default = "postgress-latest"
+  type        = string
+  default     = "postgress-latest"
+  description = "The database engine for the RDS instance. Must be either 'postgress-latest' or 'postgress14'."
 
   validation {
     condition     = contains(["postgress-latest", "postgress14"], var.engine)
@@ -33,11 +44,16 @@ variable "engine" {
   }
 }
 
+##############################
+# DB Credentials
+##############################
 variable "credentials" {
   type = object({
     username = string
     password = string
   })
+
+  description = "The credentials for the RDS instance. The username must be alphanumeric and the password must meet specific criteria."
 
   sensitive = true
 
@@ -55,4 +71,18 @@ variable "credentials" {
     4. Contain only alphanumeric characters, plus '_', '?', and '-'
     EOT
   }
+}
+
+##############################
+# DB Network Configuration
+##############################
+
+variable "subnet_ids" {
+  type        = list(string)
+  description = "The list of subnet IDs where the RDS instance will be deployed."
+}
+
+variable "security_group_ids" {
+  type        = list(string)
+  description = "The list of security group IDs to associate with the RDS instance."
 }

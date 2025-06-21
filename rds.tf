@@ -1,7 +1,10 @@
 module "database" {
-  source             = "./modules/rds"
-  project_name       = "Project-04-rds-module"
-  security_group_ids = []
+  source       = "./modules/rds"
+  project_name = "Project-04-rds-module"
+  security_group_ids = [
+    aws_security_group.Compliant.id
+    # aws_security_group.NonCompliant.id
+  ]
   subnet_ids = [
     aws_subnet.private1.id
   ]

@@ -19,8 +19,9 @@ moved {
 }
 
 resource "aws_subnet" "private1" {
-  vpc_id     = aws_vpc.custom.id
-  cidr_block = "10.0.0.0/24"
+  vpc_id            = aws_vpc.custom.id
+  cidr_block        = "10.0.0.0/24"
+  availability_zone = "us-east-1a"
 
   tags = {
     Name   = "Subnet-Custom-VPC"
@@ -28,13 +29,22 @@ resource "aws_subnet" "private1" {
   }
 }
 
+resource "aws_subnet" "private2" {
+  vpc_id            = aws_vpc.custom.id
+  cidr_block        = "10.0.1.0/24"
+  availability_zone = "us-east-1b"
+
+  tags = {
+    Name   = "Subnet-Custom-VPC"
+    Access = "private"
+  }
+}
 
 # The denied subnet is not needed anymore, but it is kept for documentation purposes.
 
 resource "aws_subnet" "denied" {
   vpc_id     = data.aws_vpc.default.id
   cidr_block = "172.31.128.0/24"
-
 
   tags = {
     Name = "Subnet-Default-VPC"
